@@ -22,7 +22,7 @@ def index():
     return render_template("index.html")
 
 @app.route("/plot/btc")
-def exec_calculate():
+def plot_btc():
 
     # Obtain query parameters
     start = datetime.strptime(request.args.get("start", default="2017-12-1", type=str), "%Y-%m-%d")
