@@ -9,7 +9,7 @@ from matplotlib.dates import date2num
 from io import BytesIO
 
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -25,9 +25,14 @@ def index():
 def exec_calculate():
 
     # Obtain query parameters
-    start = request.args.get("start", default="2017-12-1", type=str)
-    end = request.args.get("end", default="2018-4-1", type=str)
-    
+    start = datetime.strptime(request.args.get("start", default="2017-12-1", type=str), "%Y-%m-%d")
+    end = datetime.strptime(request.args.get("end", default="2017-12-31", type=str), "%Y-%m-%d")
+
+    if start > end:
+        start, end = end, start
+    if (start + timedelta(days=7)) > end:
+        end = start + timedelta(days=7)
+
     png_out = BytesIO()
 
     ax.set_xlim([start, end])
