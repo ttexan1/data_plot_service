@@ -1,6 +1,28 @@
 $(function(){
-  console.log(getUrlVars())
+  makeForm()
 })
+
+
+function makeForm(){
+  var param = {};
+  var vals = getUrlVars();
+  param["file_name"] = vals["file_name"]
+  var query = jQuery.param(param);
+  $.get("/plot/parameters" + "?" + query, function(data) {
+    var form = document.getElementById("parameters");
+    for (var i=0; i < data.result.length;  i++){
+      var p = document.createElement('p')
+      var input = document.createElement('input');
+      input.setAttribute('name', data.result[i])
+      input.setAttribute('value', "true")
+      input.setAttribute('type', "checkbox")
+      input.setAttribute('class', "parameters");
+      p.textContent = data.result[i]
+      p.appendChild(input)
+      form.appendChild(p);
+    }
+  });
+}
 
 function getUrlVars() {
   var vars = []
@@ -13,23 +35,21 @@ function getUrlVars() {
   }
   return vars;
 }
+
 function plotUserData() {
-// Buid query parameter
-  console.log();
-    var param = {};
-    var vals = getUrlVars();
-    // param["start"] = document.getElementById("start").value;
-    // param["end"] = document.getElementById("end").value;
-    param["file_name"] = vals["file_name"]
-    console.log(vals["file_name"]);
-    var query = jQuery.param(param);
-
-
-
-// Query with a new parameter
-    $.get("/plot/data" + "?" + query, function(data) {
-        document.getElementById("plotimg").src = data;
-    });
+  var param = {};
+  var vals = getUrlVars();
+  params_html = document.getElementsByClassName("parameters");
+  for (var i=0; i< params_html.length; i++) {
+    if (params_html[i].checked == true){
+      param[params_html[i].name] = params_html[i].value
+    }
+  }
+  param["file_name"] = vals["file_name"]
+  var query = jQuery.param(param);
+  $.get("/plot/data" + "?" + query, function(data) {
+      document.getElementById("plotimg").src = data;
+  });
 };
 //
 // Register Event handler

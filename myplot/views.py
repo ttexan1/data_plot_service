@@ -1,14 +1,9 @@
 from myplot import app
 from flask import Flask, request, render_template, make_response, jsonify
-import werkzeug
 import urllib
 import numpy as np
-import os
 import matplotlib.pyplot as plt
-from matplotlib.dates import date2num
-
 from io import BytesIO
-
 import pandas as pd
 from datetime import datetime, timedelta
 from mpl_finance import candlestick_ohlc
@@ -20,7 +15,6 @@ def myplot():
 
 @app.route("/living_cost")
 def living_cost():
-    print("==============================================================================================")
     register_matplotlib_converters()
     fig = plt.figure(figsize=(20,10))
     ax = fig.add_subplot(2,2,1)
@@ -69,10 +63,6 @@ def living_cost():
     ax.set_xlim(["2017/2", "2019/1"])
 
     png_out = BytesIO()
-
-    # ax.set_xlim([start, end])
-    # ax.set_ylabel("USD/BTC")
-
     plt.xticks(rotation=30)
 
     plt.savefig(png_out, format="png", bbox_inches="tight")
